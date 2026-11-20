@@ -1,0 +1,44 @@
+# Binaries & packaging outputs
+/qemu-glaze
+bin/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.app/
+*.AppImage
+*.AppDir/
+
+# Go test & coverage artifacts
+*.test
+*.out
+coverage.*
+
+# QEMU disk/image artifacts
+*.qcow2
+*.img
+*.iso
+*.raw
+
+# OS specific
+.DS_Store
+**/.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local scratch
+TODO.md
+.local/

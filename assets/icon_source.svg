@@ -1,0 +1,152 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Drop shadows -->
+    <filter id="macos-drop-shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+
+    <filter id="base-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="24" stdDeviation="20" flood-color="#0f172a" flood-opacity="0.45"/>
+    </filter>
+
+    <filter id="layer-shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.35"/>
+    </filter>
+
+    <!-- Squircle clip path -->
+    <clipPath id="squircle-clip">
+      <rect x="100" y="100" width="824" height="824" rx="185" ry="185"/>
+    </clipPath>
+
+    <!-- Background gradients -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   style="stop-color:#7dbef0;stop-opacity:1"/>
+      <stop offset="55%"  style="stop-color:#3b82f6;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1"/>
+    </linearGradient>
+
+    <radialGradient id="ambient-glow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%"   style="stop-color:#bae6fd;stop-opacity:0.6"/>
+      <stop offset="60%"  style="stop-color:#7dd3fc;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#7dd3fc;stop-opacity:0"/>
+    </radialGradient>
+
+    <!-- Top layer gradients (white) -->
+    <linearGradient id="top-face-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   style="stop-color:#ffffff;stop-opacity:1"/>
+      <stop offset="60%"  style="stop-color:#f0f9ff;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#e0f2fe;stop-opacity:1"/>
+    </linearGradient>
+
+    <linearGradient id="top-left-side" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   style="stop-color:#e2e8f0;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#cbd5e1;stop-opacity:1"/>
+    </linearGradient>
+
+    <linearGradient id="top-right-side" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   style="stop-color:#94a3b8;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#64748b;stop-opacity:1"/>
+    </linearGradient>
+
+    <linearGradient id="top-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   style="stop-color:#ffffff;stop-opacity:1"/>
+      <stop offset="50%"  style="stop-color:#ffffff;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#38bdf8;stop-opacity:0.3"/>
+    </linearGradient>
+
+    <!-- Middle layer gradients (cyan) -->
+    <linearGradient id="mid-face-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   style="stop-color:#bae6fd;stop-opacity:1"/>
+      <stop offset="50%"  style="stop-color:#38bdf8;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0ea5e9;stop-opacity:1"/>
+    </linearGradient>
+
+    <linearGradient id="mid-left-side" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   style="stop-color:#0284c7;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0369a1;stop-opacity:1"/>
+    </linearGradient>
+
+    <linearGradient id="mid-right-side" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   style="stop-color:#075985;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0c4a6e;stop-opacity:1"/>
+    </linearGradient>
+
+    <!-- Bottom layer gradients (dark blue) -->
+    <linearGradient id="bot-face-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   style="stop-color:#60a5fa;stop-opacity:1"/>
+      <stop offset="50%"  style="stop-color:#2563eb;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1"/>
+    </linearGradient>
+
+    <linearGradient id="bot-left-side" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   style="stop-color:#1e40af;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1"/>
+    </linearGradient>
+
+    <linearGradient id="bot-right-side" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   style="stop-color:#172554;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1"/>
+    </linearGradient>
+
+    <linearGradient id="accent-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   style="stop-color:#38bdf8;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0284c7;stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- macOS squircle background -->
+  <rect x="100" y="100" width="824" height="824" rx="185" ry="185" fill="url(#bg-grad)" filter="url(#macos-drop-shadow)"/>
+  <rect x="100" y="100" width="824" height="824" rx="185" ry="185" fill="url(#ambient-glow)"/>
+  <path d="M 100 100 H 924 V 350 Q 512 470 100 350 Z" fill="rgba(255,255,255,0.06)" clip-path="url(#squircle-clip)"/>
+
+  <!-- Isometric layers -->
+  <g transform="translate(512, 492)">
+
+    <!-- Bottom layer -->
+    <g transform="translate(0, 110)" filter="url(#base-shadow)">
+      <path d="M -180 0 L 0 100 L 0 145 L -180 45 Z" fill="url(#bot-left-side)"/>
+      <path d="M 0 100 L 180 0 L 180 45 L 0 145 Z" fill="url(#bot-right-side)"/>
+      <path d="M 0 -100 L 180 0 L 0 100 L -180 0 Z"
+            fill="url(#bot-face-top)"
+            stroke="rgba(255,255,255,0.25)"
+            stroke-width="2.5"
+            stroke-linejoin="round"/>
+    </g>
+
+    <!-- Middle layer -->
+    <g transform="translate(0, 0)" filter="url(#layer-shadow)">
+      <path d="M -180 0 L 0 100 L 0 145 L -180 45 Z" fill="url(#mid-left-side)"/>
+      <path d="M 0 100 L 180 0 L 180 45 L 0 145 Z" fill="url(#mid-right-side)"/>
+      <path d="M 0 -100 L 180 0 L 0 100 L -180 0 Z"
+            fill="url(#mid-face-top)"
+            stroke="rgba(255,255,255,0.4)"
+            stroke-width="2.5"
+            stroke-linejoin="round"/>
+    </g>
+
+    <!-- Top layer -->
+    <g transform="translate(0, -110)" filter="url(#layer-shadow)">
+      <path d="M -180 0 L 0 100 L 0 145 L -180 45 Z" fill="url(#top-left-side)"/>
+      <path d="M 0 100 L 180 0 L 180 45 L 0 145 Z" fill="url(#top-right-side)"/>
+      <path d="M 0 -100 L 180 0 L 0 100 L -180 0 Z"
+            fill="url(#top-face-top)"
+            stroke="url(#top-rim)"
+            stroke-width="3"
+            stroke-linejoin="round"/>
+
+      <g transform="translate(0, 0)">
+        <path d="M 0 -45 L 80 0 L 0 45 L -80 0 Z"
+              fill="rgba(56, 189, 248, 0.12)"
+              stroke="rgba(56, 189, 248, 0.35)"
+              stroke-width="2.5"
+              stroke-linejoin="round"/>
+        <path d="M 0 -22 L 40 0 L 0 22 L -40 0 Z"
+              fill="url(#accent-cyan)"
+              stroke="#ffffff"
+              stroke-width="2"
+              stroke-linejoin="round"/>
+      </g>
+    </g>
+
+  </g>
+</svg>
