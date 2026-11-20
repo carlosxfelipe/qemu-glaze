@@ -1,225 +1,296 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR" translate="no">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="google" content="notranslate" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QEMU Glaze</title>
-  <link rel="stylesheet" href="theme.css" />
-  <link rel="stylesheet" href="app.css" />
-</head>
-<body>
-  <div class="adw-split-view">
-    <aside class="adw-sidebar">
-      <div class="adw-sidebar-header">
-        <div class="adw-sidebar-brand">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-            <path d="M7 8h10M7 12h5"/>
-          </svg>
-          <span>QEMU Glaze</span>
-        </div>
-      </div>
-
-      <nav class="adw-nav-list">
-        <div class="adw-nav-row active" id="nav-vms" onclick="switchPage('vms')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
-            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
-            <line x1="6" y1="6" x2="6.01" y2="6"/>
-            <line x1="6" y1="18" x2="6.01" y2="18"/>
-          </svg>
-          <span>Minhas Máquinas</span>
-          <span class="adw-nav-badge" id="vms-count">0</span>
-        </div>
-
-        <div class="adw-nav-row" id="nav-new-vm" onclick="switchPage('new-vm')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="16"/>
-            <line x1="8" y1="12" x2="16" y2="12"/>
-          </svg>
-          <span>Nova Máquina</span>
-        </div>
-
-        <div class="adw-nav-row" id="nav-logs" onclick="switchPage('logs')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="4 17 10 11 4 5"/>
-            <line x1="12" y1="19" x2="20" y2="19"/>
-          </svg>
-          <span>Console &amp; Logs</span>
-        </div>
-
-        <div class="adw-nav-row" id="nav-system" onclick="switchPage('system')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
-            <rect x="9" y="9" width="6" height="6"/>
-            <line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/>
-            <line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/>
-            <line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/>
-            <line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>
-          </svg>
-          <span>Status do QEMU</span>
-        </div>
-
-        <div class="adw-nav-row" id="nav-about" onclick="switchPage('about')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="16" x2="12" y2="12"/>
-            <line x1="12" y1="8" x2="12.01" y2="8"/>
-          </svg>
-          <span>Sobre</span>
-        </div>
-      </nav>
-
-      <div class="adw-sidebar-footer">
-        <div class="footer-row">
-          <span>Host:</span>
-          <b id="host-arch-label">Detectando...</b>
-        </div>
-        <div class="footer-row">
-          <span>Memória Host:</span>
-          <span id="host-ram-label">-</span>
-        </div>
-        <div class="footer-row">
-          <span>Disco Livre:</span>
-          <span id="host-disk-label">Calculando...</span>
-        </div>
-        <div class="footer-row">
-          <span>QEMU:</span>
-          <span id="qemu-status-pill" style="color: var(--success-color);">Detectando...</span>
-        </div>
-      </div>
-    </aside>
-
-    <section class="adw-content-view">
-      <header class="adw-toolbar">
-        <div>
-          <div class="adw-toolbar-title" id="page-title">Minhas Máquinas Virtuais</div>
-        </div>
-        <div class="adw-toolbar-actions">
-          <button class="gtk-btn" title="Atualizar lista" onclick="loadAllVMs()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="google" content="notranslate" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QEMU Glaze</title>
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <div class="adw-split-view">
+      <aside class="adw-sidebar">
+        <div class="adw-sidebar-header">
+          <div class="adw-sidebar-brand">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--accent-color)"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="2" y="3" width="20" height="14" rx="2" />
+              <line x1="8" y1="21" x2="16" y2="21" />
+              <line x1="12" y1="17" x2="12" y2="21" />
+              <path d="M7 8h10M7 12h5" />
             </svg>
-          </button>
-          <button class="gtk-btn suggested-action" onclick="switchPage('new-vm')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            <span>QEMU Glaze</span>
+          </div>
+        </div>
+
+        <nav class="adw-nav-list">
+          <div
+            class="adw-nav-row active"
+            id="nav-vms"
+            onclick="switchPage('vms')"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+              <line x1="6" y1="6" x2="6.01" y2="6" />
+              <line x1="6" y1="18" x2="6.01" y2="18" />
             </svg>
-            Nova VM
-          </button>
-        </div>
-      </header>
-
-      <main class="adw-page-container">
-        <!-- 1. PAGE: VMS LIST -->
-        <div id="page-vms" class="adw-page">
-          <div id="vms-container" style="display: flex; flex-direction: column; gap: 12px;"></div>
-        </div>
-
-        <!-- 2. PAGE: NEW / EDIT VM & QUICK BOOT -->
-        <div id="page-new-vm" class="adw-page hidden">
-          <div class="adw-group">
-            <div class="adw-group-header">
-              <div>
-                <div class="adw-group-title">Configuração da Máquina Virtual</div>
-                <div class="adw-group-desc">Defina o nome, imagem ISO e recursos de hardware</div>
-              </div>
-            </div>
-
-            <div class="boxed-list">
-              <div class="adw-row">
-                <div class="adw-row-prefix">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                  </svg>
-                </div>
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Nome da Máquina</div>
-                  <input type="text" id="vm-name" class="adw-entry-input" placeholder="ex: Ubuntu 24.04 LTS" oninput="updateCmdPreview()" />
-                </div>
-              </div>
-
-              <div class="adw-row">
-                <div class="adw-row-prefix">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
-                    <rect x="9" y="9" width="6" height="6"/>
-                  </svg>
-                </div>
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Arquitetura de CPU</div>
-                  <div class="adw-row-subtitle" id="arch-accel-hint">aarch64 utiliza aceleração HVF nativa no Apple Silicon</div>
-                </div>
-                <div class="adw-row-suffix">
-                  <select id="vm-arch" class="select-styled" onchange="onArchChange()">
-                    <option value="aarch64">aarch64 (ARM64 — Apple Silicon)</option>
-                    <option value="x86_64">x86_64 (Intel / AMD 64-bit)</option>
-                  </select>
-                </div>
-              </div>
-            </div>
+            <span>Minhas Máquinas</span>
+            <span class="adw-nav-badge" id="vms-count">0</span>
           </div>
 
-          <div class="adw-group">
-            <div class="adw-group-header">
-              <div>
-                <div class="adw-group-title">Mídia de Inicialização (ISO)</div>
-                <div class="adw-group-desc">Selecione o arquivo de instalação ou sistema operacional (.iso, .img)</div>
-              </div>
-            </div>
-
-            <div class="boxed-list">
-              <div class="adw-row">
-                <div class="adw-row-prefix">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
-                  </svg>
-                </div>
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Imagem ISO</div>
-                  <input type="text" id="vm-iso" class="adw-entry-input" placeholder="/Users/.../caminho/para/sistema.iso" oninput="updateCmdPreview()" />
-                </div>
-                <div class="adw-row-suffix" style="gap: 8px;">
-                  <button type="button" class="gtk-btn suggested-action" onclick="chooseISO()">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                    </svg>
-                    Selecionar ISO...
-                  </button>
-                  <button type="button" class="gtk-btn" title="Limpar ISO" onclick="clearISO()">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
+          <div
+            class="adw-nav-row"
+            id="nav-new-vm"
+            onclick="switchPage('new-vm')"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="16" />
+              <line x1="8" y1="12" x2="16" y2="12" />
+            </svg>
+            <span>Nova Máquina</span>
           </div>
 
-          <div class="hardware-grid">
+          <div class="adw-nav-row" id="nav-logs" onclick="switchPage('logs')">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="4 17 10 11 4 5" />
+              <line x1="12" y1="19" x2="20" y2="19" />
+            </svg>
+            <span>Console &amp; Logs</span>
+          </div>
+
+          <div
+            class="adw-nav-row"
+            id="nav-system"
+            onclick="switchPage('system')"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+              <rect x="9" y="9" width="6" height="6" />
+              <line x1="9" y1="1" x2="9" y2="4" />
+              <line x1="15" y1="1" x2="15" y2="4" />
+              <line x1="9" y1="20" x2="9" y2="23" />
+              <line x1="15" y1="20" x2="15" y2="23" />
+              <line x1="20" y1="9" x2="23" y2="9" />
+              <line x1="20" y1="14" x2="23" y2="14" />
+              <line x1="1" y1="9" x2="4" y2="9" />
+              <line x1="1" y1="14" x2="4" y2="14" />
+            </svg>
+            <span>Status do QEMU</span>
+          </div>
+
+          <div class="adw-nav-row" id="nav-about" onclick="switchPage('about')">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <span>Sobre</span>
+          </div>
+        </nav>
+
+        <div class="adw-sidebar-footer">
+          <div class="footer-row">
+            <span>Host:</span>
+            <b id="host-arch-label">Detectando...</b>
+          </div>
+          <div class="footer-row">
+            <span>Memória Host:</span>
+            <span id="host-ram-label">-</span>
+          </div>
+          <div class="footer-row">
+            <span>Disco Livre:</span>
+            <span id="host-disk-label">Calculando...</span>
+          </div>
+          <div class="footer-row">
+            <span>QEMU:</span>
+            <span id="qemu-status-pill" style="color: var(--success-color)"
+              >Detectando...</span
+            >
+          </div>
+        </div>
+      </aside>
+
+      <section class="adw-content-view">
+        <header class="adw-toolbar">
+          <div>
+            <div class="adw-toolbar-title" id="page-title">
+              Minhas Máquinas Virtuais
+            </div>
+          </div>
+          <div class="adw-toolbar-actions">
+            <button
+              class="gtk-btn"
+              title="Atualizar lista"
+              onclick="loadAllVMs()"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+            </button>
+            <button
+              class="gtk-btn suggested-action"
+              onclick="switchPage('new-vm')"
+            >
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Nova VM
+            </button>
+          </div>
+        </header>
+
+        <main class="adw-page-container">
+          <!-- 1. PAGE: VMS LIST -->
+          <div id="page-vms" class="adw-page">
+            <div
+              id="vms-container"
+              style="display: flex; flex-direction: column; gap: 12px"
+            ></div>
+          </div>
+
+          <!-- 2. PAGE: NEW / EDIT VM & QUICK BOOT -->
+          <div id="page-new-vm" class="adw-page hidden">
             <div class="adw-group">
               <div class="adw-group-header">
                 <div>
-                  <div class="adw-group-title">Processador (CPU)</div>
-                  <div class="adw-group-desc" id="cpu-sub-label">Alocado: 2 Cores</div>
+                  <div class="adw-group-title">
+                    Configuração da Máquina Virtual
+                  </div>
+                  <div class="adw-group-desc">
+                    Defina o nome, imagem ISO e recursos de hardware
+                  </div>
                 </div>
               </div>
 
               <div class="boxed-list">
-                <div class="adw-row" style="flex-direction: column; align-items: stretch; gap: 8px; padding: 14px 16px;">
-                  <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--dim-label-color);">
-                    <span>1 Core</span>
-                    <b id="cores-badge" style="color: var(--accent-color); font-size: 13px;">2 Cores</b>
-                    <span id="max-cores-label">8 Cores</span>
+                <div class="adw-row">
+                  <div class="adw-row-prefix">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="2" y="3" width="20" height="14" rx="2" />
+                      <line x1="8" y1="21" x2="16" y2="21" />
+                      <line x1="12" y1="17" x2="12" y2="21" />
+                    </svg>
                   </div>
-                  <input type="range" id="vm-cores" min="1" max="8" value="2" oninput="onCoresSlider(this.value)" />
-                  <div class="preset-chips">
-                    <button type="button" class="chip-btn" id="chip-core-1" onclick="setCoresPreset(1)">1 Core</button>
-                    <button type="button" class="chip-btn active" id="chip-core-2" onclick="setCoresPreset(2)">2 Cores</button>
-                    <button type="button" class="chip-btn" id="chip-core-4" onclick="setCoresPreset(4)">4 Cores</button>
-                    <button type="button" class="chip-btn" id="chip-core-8" onclick="setCoresPreset(8)">8 Cores</button>
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">Nome da Máquina</div>
+                    <input
+                      type="text"
+                      id="vm-name"
+                      class="adw-entry-input"
+                      placeholder="ex: Ubuntu 24.04 LTS"
+                      oninput="updateCmdPreview()"
+                    />
+                  </div>
+                </div>
+
+                <div class="adw-row">
+                  <div class="adw-row-prefix">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+                      <rect x="9" y="9" width="6" height="6" />
+                    </svg>
+                  </div>
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">Arquitetura de CPU</div>
+                    <div class="adw-row-subtitle" id="arch-accel-hint">
+                      aarch64 utiliza aceleração HVF nativa no Apple Silicon
+                    </div>
+                  </div>
+                  <div class="adw-row-suffix">
+                    <select
+                      id="vm-arch"
+                      class="select-styled"
+                      onchange="onArchChange()"
+                    >
+                      <option value="aarch64">
+                        aarch64 (ARM64 — Apple Silicon)
+                      </option>
+                      <option value="x86_64">
+                        x86_64 (Intel / AMD 64-bit)
+                      </option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -228,284 +299,771 @@
             <div class="adw-group">
               <div class="adw-group-header">
                 <div>
-                  <div class="adw-group-title">Memória RAM</div>
-                  <div class="adw-group-desc" id="ram-sub-label">Alocado: 2048 MB (2.0 GB)</div>
+                  <div class="adw-group-title">
+                    Mídia de Inicialização (ISO)
+                  </div>
+                  <div class="adw-group-desc">
+                    Selecione o arquivo de instalação ou sistema operacional
+                    (.iso, .img)
+                  </div>
                 </div>
               </div>
 
               <div class="boxed-list">
-                <div class="adw-row" style="flex-direction: column; align-items: stretch; gap: 8px; padding: 14px 16px;">
-                  <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--dim-label-color);">
-                    <span>512 MB</span>
-                    <b id="ram-badge" style="color: var(--accent-color); font-size: 13px;">2048 MB</b>
-                    <span id="max-ram-label">8192 MB</span>
+                <div class="adw-row">
+                  <div class="adw-row-prefix">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
                   </div>
-                  <input type="range" id="vm-ram" min="512" max="8192" step="256" value="2048" oninput="onRAMSlider(this.value)" />
-                  <div class="preset-chips">
-                    <button type="button" class="chip-btn" id="chip-1024" onclick="setRAMPreset(1024)">1 GB</button>
-                    <button type="button" class="chip-btn active" id="chip-2048" onclick="setRAMPreset(2048)">2 GB</button>
-                    <button type="button" class="chip-btn" id="chip-4096" onclick="setRAMPreset(4096)">4 GB</button>
-                    <button type="button" class="chip-btn" id="chip-8192" onclick="setRAMPreset(8192)">8 GB</button>
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">Imagem ISO</div>
+                    <input
+                      type="text"
+                      id="vm-iso"
+                      class="adw-entry-input"
+                      placeholder="/Users/.../caminho/para/sistema.iso"
+                      oninput="updateCmdPreview()"
+                    />
+                  </div>
+                  <div class="adw-row-suffix" style="gap: 8px">
+                    <button
+                      type="button"
+                      class="gtk-btn suggested-action"
+                      onclick="chooseISO()"
+                    >
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"
+                        />
+                      </svg>
+                      Selecionar ISO...
+                    </button>
+                    <button
+                      type="button"
+                      class="gtk-btn"
+                      title="Limpar ISO"
+                      onclick="clearISO()"
+                    >
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="adw-group">
-            <div class="adw-group-header">
-              <div>
-                <div class="adw-group-title">Disco Rígido Virtual (Opcional)</div>
-                <div class="adw-group-desc">Crie um disco .qcow2 para instalar o sistema ou use apenas a ISO como Live CD</div>
-              </div>
-            </div>
-
-            <div class="boxed-list">
-              <div class="adw-row">
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Criar Disco Rígido Virtual Automático</div>
-                  <div class="adw-row-subtitle">Cria automaticamente um arquivo .qcow2 na pasta ~/.qemu-glaze/disks</div>
-                </div>
-                <div class="adw-row-suffix">
-                  <input type="checkbox" id="vm-create-disk" checked onchange="toggleDiskOptions()" />
-                </div>
-              </div>
-
-              <div class="adw-row" id="disk-size-row" style="flex-direction: column; align-items: stretch; gap: 8px; padding: 14px 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="hardware-grid">
+              <div class="adw-group">
+                <div class="adw-group-header">
                   <div>
-                    <div class="adw-row-title">Tamanho Máximo do Disco Virtual</div>
-                    <div class="adw-row-subtitle" id="disk-size-label">20 GB (alocação dinâmica QCOW2)</div>
-                  </div>
-                  <div style="text-align: right;">
-                    <b id="disk-badge" style="font-size: 13px; color: var(--window-fg-color);">20 GB</b>
-                    <div style="font-size: 11.5px; color: var(--dim-label-color);" id="disk-free-label">Calculando espaço livre...</div>
+                    <div class="adw-group-title">Processador (CPU)</div>
+                    <div class="adw-group-desc" id="cpu-sub-label">
+                      Alocado: 2 Cores
+                    </div>
                   </div>
                 </div>
-                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--dim-label-color); margin-top: 2px;">
-                  <span id="min-disk-label">1 GB</span>
-                  <span id="max-disk-label">100% Livre</span>
-                </div>
-                <input type="range" id="vm-disk-size" min="1" max="100" step="1" value="20" oninput="onDiskSizeSlider(this.value)" />
-                <div class="preset-chips" id="disk-preset-chips">
-                  <button type="button" class="chip-btn" data-val="10" onclick="setDiskPreset(10)">10 GB</button>
-                  <button type="button" class="chip-btn active" data-val="20" onclick="setDiskPreset(20)">20 GB</button>
-                  <button type="button" class="chip-btn" data-val="30" onclick="setDiskPreset(30)">30 GB</button>
-                  <button type="button" class="chip-btn" data-val="100" onclick="setDiskPreset(this.getAttribute('data-val'))">100% (Máx)</button>
+
+                <div class="boxed-list">
+                  <div
+                    class="adw-row"
+                    style="
+                      flex-direction: column;
+                      align-items: stretch;
+                      gap: 8px;
+                      padding: 14px 16px;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        font-size: 12px;
+                        color: var(--dim-label-color);
+                      "
+                    >
+                      <span>1 Core</span>
+                      <b
+                        id="cores-badge"
+                        style="color: var(--accent-color); font-size: 13px"
+                        >2 Cores</b
+                      >
+                      <span id="max-cores-label">8 Cores</span>
+                    </div>
+                    <input
+                      type="range"
+                      id="vm-cores"
+                      min="1"
+                      max="8"
+                      value="2"
+                      oninput="onCoresSlider(this.value)"
+                    />
+                    <div class="preset-chips">
+                      <button
+                        type="button"
+                        class="chip-btn"
+                        id="chip-core-1"
+                        onclick="setCoresPreset(1)"
+                      >
+                        1 Core
+                      </button>
+                      <button
+                        type="button"
+                        class="chip-btn active"
+                        id="chip-core-2"
+                        onclick="setCoresPreset(2)"
+                      >
+                        2 Cores
+                      </button>
+                      <button
+                        type="button"
+                        class="chip-btn"
+                        id="chip-core-4"
+                        onclick="setCoresPreset(4)"
+                      >
+                        4 Cores
+                      </button>
+                      <button
+                        type="button"
+                        class="chip-btn"
+                        id="chip-core-8"
+                        onclick="setCoresPreset(8)"
+                      >
+                        8 Cores
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="adw-row">
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Ou Usar Disco Existente (.qcow2 / .img)</div>
-                  <input type="text" id="vm-disk-path" class="adw-entry-input" placeholder="Opcional: caminho de disco já existente" oninput="updateCmdPreview()" />
+              <div class="adw-group">
+                <div class="adw-group-header">
+                  <div>
+                    <div class="adw-group-title">Memória RAM</div>
+                    <div class="adw-group-desc" id="ram-sub-label">
+                      Alocado: 2048 MB (2.0 GB)
+                    </div>
+                  </div>
                 </div>
-                <div class="adw-row-suffix">
-                  <button type="button" class="gtk-btn" onclick="chooseExistingDisk()">Procurar Disco...</button>
+
+                <div class="boxed-list">
+                  <div
+                    class="adw-row"
+                    style="
+                      flex-direction: column;
+                      align-items: stretch;
+                      gap: 8px;
+                      padding: 14px 16px;
+                    "
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        font-size: 12px;
+                        color: var(--dim-label-color);
+                      "
+                    >
+                      <span>512 MB</span>
+                      <b
+                        id="ram-badge"
+                        style="color: var(--accent-color); font-size: 13px"
+                        >2048 MB</b
+                      >
+                      <span id="max-ram-label">8192 MB</span>
+                    </div>
+                    <input
+                      type="range"
+                      id="vm-ram"
+                      min="512"
+                      max="8192"
+                      step="256"
+                      value="2048"
+                      oninput="onRAMSlider(this.value)"
+                    />
+                    <div class="preset-chips">
+                      <button
+                        type="button"
+                        class="chip-btn"
+                        id="chip-1024"
+                        onclick="setRAMPreset(1024)"
+                      >
+                        1 GB
+                      </button>
+                      <button
+                        type="button"
+                        class="chip-btn active"
+                        id="chip-2048"
+                        onclick="setRAMPreset(2048)"
+                      >
+                        2 GB
+                      </button>
+                      <button
+                        type="button"
+                        class="chip-btn"
+                        id="chip-4096"
+                        onclick="setRAMPreset(4096)"
+                      >
+                        4 GB
+                      </button>
+                      <button
+                        type="button"
+                        class="chip-btn"
+                        id="chip-8192"
+                        onclick="setRAMPreset(8192)"
+                      >
+                        8 GB
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="adw-group">
-            <div class="adw-group-header">
-              <div>
-                <div class="adw-group-title">Comando QEMU Gerado</div>
-                <div class="adw-group-desc">Linha de comando que será executada nativamente pelo processo</div>
+            <div class="adw-group">
+              <div class="adw-group-header">
+                <div>
+                  <div class="adw-group-title">
+                    Disco Rígido Virtual (Opcional)
+                  </div>
+                  <div class="adw-group-desc">
+                    Crie um disco .qcow2 para instalar o sistema ou use apenas a
+                    ISO como Live CD
+                  </div>
+                </div>
               </div>
-              <button class="gtk-btn flat" type="button" onclick="copyCommand()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+
+              <div class="boxed-list">
+                <div class="adw-row">
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">
+                      Criar Disco Rígido Virtual Automático
+                    </div>
+                    <div class="adw-row-subtitle">
+                      Cria automaticamente um arquivo .qcow2 na pasta
+                      ~/.qemu-glaze/disks
+                    </div>
+                  </div>
+                  <div class="adw-row-suffix">
+                    <input
+                      type="checkbox"
+                      id="vm-create-disk"
+                      checked
+                      onchange="toggleDiskOptions()"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  class="adw-row"
+                  id="disk-size-row"
+                  style="
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 8px;
+                    padding: 14px 16px;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                    "
+                  >
+                    <div>
+                      <div class="adw-row-title">
+                        Tamanho Máximo do Disco Virtual
+                      </div>
+                      <div class="adw-row-subtitle" id="disk-size-label">
+                        20 GB (alocação dinâmica QCOW2)
+                      </div>
+                    </div>
+                    <div style="text-align: right">
+                      <b
+                        id="disk-badge"
+                        style="font-size: 13px; color: var(--window-fg-color)"
+                        >20 GB</b
+                      >
+                      <div
+                        style="font-size: 11.5px; color: var(--dim-label-color)"
+                        id="disk-free-label"
+                      >
+                        Calculando espaço livre...
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      font-size: 12px;
+                      color: var(--dim-label-color);
+                      margin-top: 2px;
+                    "
+                  >
+                    <span id="min-disk-label">1 GB</span>
+                    <span id="max-disk-label">100% Livre</span>
+                  </div>
+                  <input
+                    type="range"
+                    id="vm-disk-size"
+                    min="1"
+                    max="100"
+                    step="1"
+                    value="20"
+                    oninput="onDiskSizeSlider(this.value)"
+                  />
+                  <div class="preset-chips" id="disk-preset-chips">
+                    <button
+                      type="button"
+                      class="chip-btn"
+                      data-val="10"
+                      onclick="setDiskPreset(10)"
+                    >
+                      10 GB
+                    </button>
+                    <button
+                      type="button"
+                      class="chip-btn active"
+                      data-val="20"
+                      onclick="setDiskPreset(20)"
+                    >
+                      20 GB
+                    </button>
+                    <button
+                      type="button"
+                      class="chip-btn"
+                      data-val="30"
+                      onclick="setDiskPreset(30)"
+                    >
+                      30 GB
+                    </button>
+                    <button
+                      type="button"
+                      class="chip-btn"
+                      data-val="100"
+                      onclick="setDiskPreset(this.getAttribute('data-val'))"
+                    >
+                      100% (Máx)
+                    </button>
+                  </div>
+                </div>
+
+                <div class="adw-row">
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">
+                      Ou Usar Disco Existente (.qcow2 / .img)
+                    </div>
+                    <input
+                      type="text"
+                      id="vm-disk-path"
+                      class="adw-entry-input"
+                      placeholder="Opcional: caminho de disco já existente"
+                      oninput="updateCmdPreview()"
+                    />
+                  </div>
+                  <div class="adw-row-suffix">
+                    <button
+                      type="button"
+                      class="gtk-btn"
+                      onclick="chooseExistingDisk()"
+                    >
+                      Procurar Disco...
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="adw-group">
+              <div class="adw-group-header">
+                <div>
+                  <div class="adw-group-title">Comando QEMU Gerado</div>
+                  <div class="adw-group-desc">
+                    Linha de comando que será executada nativamente pelo
+                    processo
+                  </div>
+                </div>
+                <button
+                  class="gtk-btn flat"
+                  type="button"
+                  onclick="copyCommand()"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path
+                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                    />
+                  </svg>
+                  Copiar Comando
+                </button>
+              </div>
+
+              <div class="cmd-preview" id="cmd-preview-box">
+                qemu-system-aarch64 -m 2048M -smp 2 -M virt,highmem=on -accel
+                hvf -cpu host -display cocoa
+              </div>
+            </div>
+
+            <div
+              style="
+                display: flex;
+                gap: 12px;
+                margin-top: 8px;
+                padding-bottom: 30px;
+              "
+            >
+              <button
+                type="button"
+                class="gtk-btn suggested-action"
+                style="padding: 10px 22px; font-size: 14px"
+                onclick="startVMFromForm()"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polygon points="5 3 19 12 5 21 5 3" />
                 </svg>
-                Copiar Comando
+                Iniciar Imediatamente (Quick Launch)
+              </button>
+
+              <button
+                type="button"
+                class="gtk-btn"
+                style="padding: 10px 20px; font-size: 14px"
+                onclick="saveVMFromForm()"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+                  />
+                  <polyline points="17 21 17 13 7 13 7 21" />
+                  <polyline points="7 3 7 8 15 8" />
+                </svg>
+                Salvar Máquina
+              </button>
+
+              <button
+                type="button"
+                class="gtk-btn"
+                style="margin-left: auto"
+                onclick="resetForm()"
+              >
+                Limpar Campos
               </button>
             </div>
-
-            <div class="cmd-preview" id="cmd-preview-box">
-              qemu-system-aarch64 -m 2048M -smp 2 -M virt,highmem=on -accel hvf -cpu host -display cocoa
-            </div>
           </div>
 
-          <div style="display: flex; gap: 12px; margin-top: 8px; padding-bottom: 30px;">
-            <button type="button" class="gtk-btn suggested-action" style="padding: 10px 22px; font-size: 14px;" onclick="startVMFromForm()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-              </svg>
-              Iniciar Imediatamente (Quick Launch)
-            </button>
-
-            <button type="button" class="gtk-btn" style="padding: 10px 20px; font-size: 14px;" onclick="saveVMFromForm()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                <polyline points="17 21 17 13 7 13 7 21"/>
-                <polyline points="7 3 7 8 15 8"/>
-              </svg>
-              Salvar Máquina
-            </button>
-
-            <button type="button" class="gtk-btn" style="margin-left: auto;" onclick="resetForm()">
-              Limpar Campos
-            </button>
-          </div>
-        </div>
-
-        <!-- 3. PAGE: CONSOLE & LOGS -->
-        <div id="page-logs" class="adw-page hidden">
-          <div class="adw-group">
-            <div class="adw-group-header">
-              <div>
-                <div class="adw-group-title">Terminal &amp; Logs de Execução</div>
-                <div class="adw-group-desc">Acompanhe a saída de inicialização e mensagens do QEMU</div>
-              </div>
-              <div style="display: flex; gap: 8px;">
-                <select id="log-vm-select" class="select-styled" onchange="switchLogVM()">
-                  <option value="">Selecione uma máquina...</option>
-                </select>
-                <button class="gtk-btn flat" onclick="clearCurrentLogs()">Limpar</button>
-                <button class="gtk-btn flat" onclick="copyCurrentLogs()">Copiar</button>
-              </div>
-            </div>
-
-            <div class="log-terminal" id="terminal-content">
-[QEMU Glaze] Aguardando inicialização de máquinas virtuais...
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. PAGE: SYSTEM & QEMU STATUS -->
-        <div id="page-system" class="adw-page hidden">
-          <div class="adw-group">
-            <div class="adw-group-header">
-              <div>
-                <div class="adw-group-title">Diagnóstico do QEMU &amp; Sistema</div>
-                <div class="adw-group-desc">Binários detectados no sistema e recursos disponíveis</div>
-              </div>
-            </div>
-
-            <div class="boxed-list">
-              <div class="adw-row">
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Versão do QEMU</div>
-                  <div class="adw-row-subtitle" id="sys-qemu-version">Detectando...</div>
-                </div>
-                <div class="adw-row-suffix">
-                  <span class="gtk-pill info" id="sys-version-pill">-</span>
-                </div>
-              </div>
-
-              <div class="adw-row">
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Executável ARM64 (aarch64)</div>
-                  <div class="adw-row-subtitle" id="sys-arm-path">-</div>
-                </div>
-                <div class="adw-row-suffix">
-                  <span class="gtk-pill" id="sys-arm-pill">-</span>
-                </div>
-              </div>
-
-              <div class="adw-row">
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Executável x86_64</div>
-                  <div class="adw-row-subtitle" id="sys-x86-path">-</div>
-                </div>
-                <div class="adw-row-suffix">
-                  <span class="gtk-pill" id="sys-x86-pill">-</span>
-                </div>
-              </div>
-
-              <div class="adw-row">
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Criador de Discos (qemu-img)</div>
-                  <div class="adw-row-subtitle" id="sys-img-path">-</div>
-                </div>
-                <div class="adw-row-suffix">
-                  <span class="gtk-pill" id="sys-img-pill">-</span>
-                </div>
-              </div>
-
-              <div class="adw-row">
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Firmware UEFI ARM64 (EDK2 OVMF)</div>
-                  <div class="adw-row-subtitle" id="sys-edk2-path">-</div>
-                </div>
-                <div class="adw-row-suffix">
-                  <span class="gtk-pill" id="sys-edk2-pill">-</span>
-                </div>
-              </div>
-
-              <div class="adw-row">
-                <div class="adw-row-text">
-                  <div class="adw-row-title">Diretório de Armazenamento de Discos</div>
-                  <div class="adw-row-subtitle" id="sys-disks-dir">~/.qemu-glaze/disks</div>
-                </div>
-                <div class="adw-row-suffix">
-                  <button class="gtk-btn" onclick="openDisksFolder()">Abrir Pasta</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. PAGE: ABOUT -->
-        <div id="page-about" class="adw-page hidden">
-          <div style="text-align: center; padding: 20px 16px 28px;">
-            <img src="icon.png" width="84" height="84" style="border-radius: 18px; box-shadow: 0 10px 24px rgba(0,0,0,0.18); margin-bottom: 14px;" alt="QEMU Glaze Icon" />
-            <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 6px 0; color: var(--window-fg-color);">QEMU Glaze</h2>
-            <div style="font-size: 13px; color: var(--dim-label-color); max-width: 460px; margin: 0 auto 16px;">
-              Gerenciador leve e moderno de máquinas virtuais QEMU para macOS e Linux, rodando sobre WebView nativa sem CGo e origem portless <code>app://</code>.
-            </div>
-          </div>
-
-          <div class="adw-group">
-            <div class="adw-group-header">
-              <div class="adw-group-title">Motor Desktop</div>
-              <div class="adw-group-desc">Arquitetura sem CGo e sem servidor TCP</div>
-            </div>
-            <div class="boxed-list">
-              <div class="adw-row" style="align-items: flex-start; padding: 16px;">
-                <div class="adw-row-prefix" style="margin-top: 2px;">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-                  </svg>
-                </div>
-                <div class="adw-row-text">
-                  <div class="adw-row-title" style="font-size: 15px;">Glaze WebView + purego</div>
-                  <div class="adw-row-subtitle" style="margin-top: 4px; line-height: 1.5;">
-                    Interface servida diretamente via <code>app://home/index.html</code> (Secure Context sem portas TCP), com diálogos nativos de arquivos, menus nativos via <code>glaze/menu</code> e comunicação bidirecional em tempo real via <code>glaze.events</code>.
+          <!-- 3. PAGE: CONSOLE & LOGS -->
+          <div id="page-logs" class="adw-page hidden">
+            <div class="adw-group">
+              <div class="adw-group-header">
+                <div>
+                  <div class="adw-group-title">
+                    Terminal &amp; Logs de Execução
+                  </div>
+                  <div class="adw-group-desc">
+                    Acompanhe a saída de inicialização e mensagens do QEMU
                   </div>
                 </div>
-                <div class="adw-row-suffix">
-                  <button type="button" class="gtk-btn suggested-action" onclick="openExternalLink('https://github.com/crgimenes/glaze')">
-                    Conhecer o Glaze
+                <div style="display: flex; gap: 8px">
+                  <select
+                    id="log-vm-select"
+                    class="select-styled"
+                    onchange="switchLogVM()"
+                  >
+                    <option value="">Selecione uma máquina...</option>
+                  </select>
+                  <button class="gtk-btn flat" onclick="clearCurrentLogs()">
+                    Limpar
+                  </button>
+                  <button class="gtk-btn flat" onclick="copyCurrentLogs()">
+                    Copiar
                   </button>
                 </div>
               </div>
+
+              <div class="log-terminal" id="terminal-content">
+                [QEMU Glaze] Aguardando inicialização de máquinas virtuais...
+              </div>
             </div>
           </div>
-        </div>
-      </main>
-    </section>
-  </div>
 
-  <!-- Confirmation Modal -->
-  <div id="confirm-modal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <div class="modal-title" id="confirm-title">Excluir Máquina</div>
-      <div class="modal-body" id="confirm-message"></div>
-      <label class="modal-check" id="confirm-disk-wrap">
-        <input type="checkbox" id="confirm-delete-disk" />
-        <span>Excluir também o arquivo de disco (.qcow2) associado</span>
-      </label>
-      <div class="modal-actions">
-        <button type="button" class="gtk-btn" onclick="resolveConfirmModal(false)">Cancelar</button>
-        <button type="button" class="gtk-btn destructive-action" onclick="resolveConfirmModal(true)">Excluir</button>
+          <!-- 4. PAGE: SYSTEM & QEMU STATUS -->
+          <div id="page-system" class="adw-page hidden">
+            <div class="adw-group">
+              <div class="adw-group-header">
+                <div>
+                  <div class="adw-group-title">
+                    Diagnóstico do QEMU &amp; Sistema
+                  </div>
+                  <div class="adw-group-desc">
+                    Binários detectados no sistema e recursos disponíveis
+                  </div>
+                </div>
+              </div>
+
+              <div class="boxed-list">
+                <div class="adw-row">
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">Versão do QEMU</div>
+                    <div class="adw-row-subtitle" id="sys-qemu-version">
+                      Detectando...
+                    </div>
+                  </div>
+                  <div class="adw-row-suffix">
+                    <span class="gtk-pill info" id="sys-version-pill">-</span>
+                  </div>
+                </div>
+
+                <div class="adw-row">
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">Executável ARM64 (aarch64)</div>
+                    <div class="adw-row-subtitle" id="sys-arm-path">-</div>
+                  </div>
+                  <div class="adw-row-suffix">
+                    <span class="gtk-pill" id="sys-arm-pill">-</span>
+                  </div>
+                </div>
+
+                <div class="adw-row">
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">Executável x86_64</div>
+                    <div class="adw-row-subtitle" id="sys-x86-path">-</div>
+                  </div>
+                  <div class="adw-row-suffix">
+                    <span class="gtk-pill" id="sys-x86-pill">-</span>
+                  </div>
+                </div>
+
+                <div class="adw-row">
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">
+                      Criador de Discos (qemu-img)
+                    </div>
+                    <div class="adw-row-subtitle" id="sys-img-path">-</div>
+                  </div>
+                  <div class="adw-row-suffix">
+                    <span class="gtk-pill" id="sys-img-pill">-</span>
+                  </div>
+                </div>
+
+                <div class="adw-row">
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">
+                      Firmware UEFI ARM64 (EDK2 OVMF)
+                    </div>
+                    <div class="adw-row-subtitle" id="sys-edk2-path">-</div>
+                  </div>
+                  <div class="adw-row-suffix">
+                    <span class="gtk-pill" id="sys-edk2-pill">-</span>
+                  </div>
+                </div>
+
+                <div class="adw-row">
+                  <div class="adw-row-text">
+                    <div class="adw-row-title">
+                      Diretório de Armazenamento de Discos
+                    </div>
+                    <div class="adw-row-subtitle" id="sys-disks-dir">
+                      ~/.qemu-glaze/disks
+                    </div>
+                  </div>
+                  <div class="adw-row-suffix">
+                    <button class="gtk-btn" onclick="openDisksFolder()">
+                      Abrir Pasta
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. PAGE: ABOUT -->
+          <div id="page-about" class="adw-page hidden">
+            <div style="text-align: center; padding: 20px 16px 28px">
+              <img
+                src="icon.png"
+                width="84"
+                height="84"
+                style="
+                  border-radius: 18px;
+                  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+                  margin-bottom: 14px;
+                "
+                alt="QEMU Glaze Icon"
+              />
+              <h2
+                style="
+                  font-size: 22px;
+                  font-weight: 700;
+                  margin: 0 0 6px 0;
+                  color: var(--window-fg-color);
+                "
+              >
+                QEMU Glaze
+              </h2>
+              <div
+                style="
+                  font-size: 13px;
+                  color: var(--dim-label-color);
+                  max-width: 460px;
+                  margin: 0 auto 16px;
+                "
+              >
+                Gerenciador leve e moderno de máquinas virtuais QEMU para macOS
+                e Linux, rodando sobre WebView nativa sem CGo e origem portless
+                <code>app://</code>.
+              </div>
+            </div>
+
+            <div class="adw-group">
+              <div class="adw-group-header">
+                <div class="adw-group-title">Motor Desktop</div>
+                <div class="adw-group-desc">
+                  Arquitetura sem CGo e sem servidor TCP
+                </div>
+              </div>
+              <div class="boxed-list">
+                <div
+                  class="adw-row"
+                  style="align-items: flex-start; padding: 16px"
+                >
+                  <div class="adw-row-prefix" style="margin-top: 2px">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="var(--accent-color)"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="16 18 22 12 16 6" />
+                      <polyline points="8 6 2 12 8 18" />
+                    </svg>
+                  </div>
+                  <div class="adw-row-text">
+                    <div class="adw-row-title" style="font-size: 15px">
+                      Glaze WebView + purego
+                    </div>
+                    <div
+                      class="adw-row-subtitle"
+                      style="margin-top: 4px; line-height: 1.5"
+                    >
+                      Interface servida diretamente via
+                      <code>app://home/index.html</code> (Secure Context sem
+                      portas TCP), com diálogos nativos de arquivos, menus
+                      nativos via <code>glaze/menu</code> e comunicação
+                      bidirecional em tempo real via <code>glaze.events</code>.
+                    </div>
+                  </div>
+                  <div class="adw-row-suffix">
+                    <button
+                      type="button"
+                      class="gtk-btn suggested-action"
+                      onclick="
+                        openExternalLink('https://github.com/crgimenes/glaze')
+                      "
+                    >
+                      Conhecer o Glaze
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <div class="modal-title" id="confirm-title">Excluir Máquina</div>
+        <div class="modal-body" id="confirm-message"></div>
+        <label class="modal-check" id="confirm-disk-wrap">
+          <input type="checkbox" id="confirm-delete-disk" />
+          <span>Excluir também o arquivo de disco (.qcow2) associado</span>
+        </label>
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="gtk-btn"
+            onclick="resolveConfirmModal(false)"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="gtk-btn destructive-action"
+            onclick="resolveConfirmModal(true)"
+          >
+            Excluir
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="adw-toast" class="adw-toast-overlay"></div>
+    <div id="adw-toast" class="adw-toast-overlay"></div>
 
-  <script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>

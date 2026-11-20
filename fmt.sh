@@ -9,15 +9,15 @@ else
   echo "⚠️  'go' not found, skipping Go formatting."
 fi
 
-# 2. Format JavaScript files with Prettier (.js only, ignoring .ts)
+# 2. Format web and Markdown files with Prettier (.js, .css, .html, .md)
 if command -v prettier >/dev/null 2>&1; then
-  echo "✨ Formatting JavaScript files (.js only with prettier)..."
-  find . -name "*.js" -not -path "*/.*" -not -path "*/node_modules/*" -exec prettier --write {} +
+  echo "✨ Formatting files (.js, .css, .html, .md with prettier)..."
+  find . \( -name "*.js" -o -name "*.css" -o -name "*.html" -o -name "*.md" \) -not -path "*/.*" -not -path "*/node_modules/*" -exec prettier --write {} +
 elif command -v npx >/dev/null 2>&1; then
-  echo "✨ Formatting JavaScript files (.js only with npx prettier)..."
-  find . -name "*.js" -not -path "*/.*" -not -path "*/node_modules/*" -exec npx --yes prettier --write {} +
+  echo "✨ Formatting files (.js, .css, .html, .md with npx prettier)..."
+  find . \( -name "*.js" -o -name "*.css" -o -name "*.html" -o -name "*.md" \) -not -path "*/.*" -not -path "*/node_modules/*" -exec npx --yes prettier --write {} +
 else
-  echo "⚠️  Neither 'prettier' nor 'npx' found. Skipping JavaScript formatting."
+  echo "⚠️  Neither 'prettier' nor 'npx' found. Skipping Prettier formatting."
 fi
 
 # 3. Format Shell scripts (prefers native shfmt from brew, falls back to uvx)
