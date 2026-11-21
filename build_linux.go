@@ -5,6 +5,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -72,8 +74,12 @@ Terminal=false
 StartupWMClass=%s
 `, appName, execName, execName, description, categories, execName)
 
-	_ = os.WriteFile(filepath.Join(appDirName, execName+".desktop"), []byte(desktopContent), 0644)
-	_ = os.WriteFile(filepath.Join(applicationsDir, execName+".desktop"), []byte(desktopContent), 0644)
+	if err := os.WriteFile(filepath.Join(appDirName, execName+".desktop"), []byte(desktopContent), 0644); err != nil {
+		fatalf("failed to write root .desktop: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(applicationsDir, execName+".desktop"), []byte(desktopContent), 0644); err != nil {
+		fatalf("failed to write applications .desktop: %v", err)
+	}
 
 	appRunContent := fmt.Sprintf(`#!/bin/sh
 SELF=$(readlink -f "$0")
@@ -82,14 +88,16 @@ export PATH="${HERE}/usr/bin:${PATH}"
 export LD_LIBRARY_PATH="${HERE}/usr/lib:${LD_LIBRARY_PATH}"
 exec "${HERE}/usr/bin/%s" "$@"
 `, execName)
-	_ = os.WriteFile(filepath.Join(appDirName, "AppRun"), []byte(appRunContent), 0755)
-
-	toolPath, err := exec.LookPath("appimagetool")
-	if err != nil {
-		fmt.Printf("ℹ️  appimagetool não encontrado no PATH; AppDir gerado em %s\n", appDirName)
-		return
+	if err := os.WriteFile(filepath.Join(appDirName, "AppRun"), []byte(appRunContent), 0755); err != nil {
+		fatalf("failed to write AppRun: %v", err)
 	}
 
+	toolPath, err := ensureAppImageTool(arch)
+	if err != nil {
+		fatalf("failed to obtain appimagetool: %v", err)
+	}
+
+	fmt.Printf("🚀 Packaging AppImage using %s...\n", filepath.Base(toolPath))
 	pkgCmd := exec.Command(toolPath, appDirName, outputAppImage)
 	pkgCmd.Env = append(os.Environ(),
 		fmt.Sprintf("ARCH=%s", arch),
@@ -104,7 +112,14 @@ exec "${HERE}/usr/bin/%s" "$@"
 	if !*keepAppDir {
 		_ = os.RemoveAll(appDirName)
 	}
-	fmt.Printf("\n✨ Successfully generated: %s\n", outputAppImage)
+
+	fi, err := os.Stat(outputAppImage)
+	if err != nil {
+		fatalf("failed to verify output AppImage: %v", err)
+	}
+	sizeMB := float64(fi.Size()) / (1024 * 1024)
+	fmt.Printf("\n✨ Successfully generated: %s (%.2f MB)\n", outputAppImage, sizeMB)
+	fmt.Printf("👉 To run: ./%s\n", outputAppImage)
 }
 
 func appImageArch(goarch string) string {
@@ -113,9 +128,74 @@ func appImageArch(goarch string) string {
 		return "x86_64"
 	case "arm64":
 		return "aarch64"
+	case "386":
+		return "i686"
+	case "arm":
+		return "armhf"
 	default:
 		return ""
 	}
+}
+
+func ensureAppImageTool(arch string) (string, error) {
+	if p, err := exec.LookPath("appimagetool"); err == nil {
+		return p, nil
+	}
+
+	userCache, err := os.UserCacheDir()
+	if err != nil {
+		userCache = filepath.Join(os.TempDir(), "glaze-cache")
+	}
+	toolsDir := filepath.Join(userCache, "glaze", "tools")
+	if err := os.MkdirAll(toolsDir, 0755); err != nil {
+		return "", err
+	}
+
+	toolFileName := fmt.Sprintf("appimagetool-%s.AppImage", arch)
+	toolPath := filepath.Join(toolsDir, toolFileName)
+
+	if fi, err := os.Stat(toolPath); err == nil && fi.Size() > 0 {
+		return toolPath, nil
+	}
+
+	url := fmt.Sprintf("https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-%s.AppImage", arch)
+	fmt.Printf("📥 appimagetool não encontrado. Baixando de %s -> %s\n", url, toolPath)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", fmt.Errorf("download error: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("download failed with HTTP status: %s", resp.Status)
+	}
+
+	tmpFile := toolPath + ".tmp"
+	out, err := os.OpenFile(tmpFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0755)
+	if err != nil {
+		return "", err
+	}
+
+	if _, err := io.Copy(out, resp.Body); err != nil {
+		out.Close()
+		_ = os.Remove(tmpFile)
+		return "", fmt.Errorf("failed writing downloaded file: %w", err)
+	}
+	if err := out.Close(); err != nil {
+		_ = os.Remove(tmpFile)
+		return "", err
+	}
+
+	if err := os.Rename(tmpFile, toolPath); err != nil {
+		return "", err
+	}
+
+	if err := os.Chmod(toolPath, 0755); err != nil {
+		return "", err
+	}
+
+	return toolPath, nil
 }
 
 func fatalf(format string, args ...any) {

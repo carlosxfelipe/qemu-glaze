@@ -77,7 +77,7 @@ open "QEMU Glaze.app"
 
 ### Linux (`AppDir` / `AppImage` com `CGO_ENABLED=0`)
 
-Gera `QEMU_Glaze.AppDir` e, se `appimagetool` estiver disponível no `PATH`, cria `QEMU_Glaze-1.0.0-<arch>.AppImage` (`x86_64` ou `aarch64`):
+Gera `QEMU_Glaze-1.0.0-<arch>.AppImage` (`x86_64`, `aarch64`, `i686` ou `armhf`), baixando automaticamente o `appimagetool` em cache caso não esteja no `PATH`:
 
 ```bash
 go run build_linux.go

@@ -15,7 +15,7 @@ if [[ "$1" == "--local" ]]; then
   exit 0
 fi
 
-echo "🧊 Atualizando github.com/crgimenes/glaze para o commit mais recente no main..."
+echo "🧊 Atualizando github.com/crgimenes/glaze para o commit mais recente no trunk..."
 
 # Se houver diretiva de replace local ou require v0.0.0 inválido, limpa para buscar do GitHub
 if grep -q "replace github.com/crgimenes/glaze" go.mod 2>/dev/null; then
@@ -27,7 +27,7 @@ if grep -q "github.com/crgimenes/glaze v0.0.0$" go.mod 2>/dev/null; then
   go mod edit -droprequire github.com/crgimenes/glaze
 fi
 
-GOPROXY=direct go get github.com/crgimenes/glaze@main
+GOPROXY=direct go get github.com/crgimenes/glaze@trunk
 go mod tidy
 
 echo "🧪 Executando vet e testes..."
