@@ -17,7 +17,7 @@ func TestAssetName(t *testing.T) {
 	}{
 		{"app://home/", "index.html"},
 		{"app://home/index.html", "index.html"},
-		{"app://home/theme.css", "theme.css"},
+		{"app://home/app.css", "app.css"},
 		{"app://home/app.js", "app.js"},
 		{"app://home/icon.png", "icon.png"},
 		{"app://home/../secret", "secret"},
@@ -38,7 +38,7 @@ func TestServeAsset(t *testing.T) {
 		t.Errorf("unexpected MIME type for index.html: %q", resp.MIMEType)
 	}
 
-	cssResp := serveAsset(&glaze.SchemeRequest{URL: "app://home/theme.css"})
+	cssResp := serveAsset(&glaze.SchemeRequest{URL: "app://home/app.css"})
 	if cssResp == nil || !strings.Contains(cssResp.MIMEType, "text/css") {
 		t.Errorf("expected text/css MIME type, got %+v", cssResp)
 	}

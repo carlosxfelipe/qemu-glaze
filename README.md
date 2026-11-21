@@ -98,7 +98,7 @@ go run assets/generate_icon.go
 - `main.go` — inicialização da janela Glaze, protocolo `app://`, API exposta ao frontend (`AppAPI`), menu nativo e telemetria.
 - `vm/` — gerenciamento do ciclo de vida dos processos QEMU, construção de comandos, criação de discos e detecção de ambiente.
 - `store/` — persistência local criptografada com AES-256-GCM.
-- `ui/` — interface web embarcada (`index.html`, `theme.css`, `app.css`, `app.js`).
+- `ui/` — interface web embarcada (`index.html`, `app.css`, `app.js`).
 - `assets/` — ícone fonte SVG, ícones compilados e script `generate_icon.go`.
 - `build_mac.go` / `build_linux.go` — empacotamento nativo para macOS e Linux.
 
