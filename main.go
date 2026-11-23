@@ -475,6 +475,7 @@ func main() {
 
 	w.SetTitle("QEMU Glaze — Virtual Machine Manager")
 	w.SetSize(1180, 780, glaze.HintNone)
+	w.SetSize(960, 680, glaze.HintMin)
 	w.Navigate("app://home/index.html")
 
 	// Background telemetry ticker for running VM uptime updates.

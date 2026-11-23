@@ -45,7 +45,7 @@ Variáveis de ambiente úteis durante o desenvolvimento:
 Gerencia a dependência do `github.com/crgimenes/glaze` no `go.mod` e executa `go mod tidy`, `go vet ./...` e `go test ./...`:
 
 ```bash
-# Atualiza para o commit mais recente da branch main no GitHub
+# Atualiza para o commit mais recente da branch trunk no GitHub
 ./update-glaze.sh
 
 # Alterna para o repositório local em ../glaze (via diretiva replace)
@@ -101,6 +101,7 @@ go run assets/generate_icon.go
 - `ui/` — interface web embarcada (`index.html`, `app.css`, `app.js`).
 - `assets/` — ícone fonte SVG, ícones compilados e script `generate_icon.go`.
 - `build_mac.go` / `build_linux.go` — empacotamento nativo para macOS e Linux.
+- `AGENTS.md` — diretrizes de interface (GNOME HIG / GTK 4.x+) e arquitetura para colaboradores e agentes.
 
 ## Licença
 
