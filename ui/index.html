@@ -477,11 +477,11 @@
                         aria-label="Núcleos de CPU"
                         oninput="onCoresSlider(this.value)"
                       />
-                      <div class="preset-chips">
+                      <div class="preset-chips" id="cores-preset-chips">
                         <button
                           type="button"
                           class="chip-btn"
-                          id="chip-core-1"
+                          data-val="1"
                           onclick="setCoresPreset(1)"
                         >
                           1 Core
@@ -489,7 +489,7 @@
                         <button
                           type="button"
                           class="chip-btn active"
-                          id="chip-core-2"
+                          data-val="2"
                           onclick="setCoresPreset(2)"
                         >
                           2 Cores
@@ -497,7 +497,7 @@
                         <button
                           type="button"
                           class="chip-btn"
-                          id="chip-core-4"
+                          data-val="4"
                           onclick="setCoresPreset(4)"
                         >
                           4 Cores
@@ -505,7 +505,7 @@
                         <button
                           type="button"
                           class="chip-btn"
-                          id="chip-core-8"
+                          data-val="8"
                           onclick="setCoresPreset(8)"
                         >
                           8 Cores
@@ -528,7 +528,7 @@
                   <div class="boxed-list">
                     <div class="adw-row adw-row-stacked">
                       <div class="slider-scale-head">
-                        <span>512 MB</span>
+                        <span>256 MB</span>
                         <span class="slider-scale-badge" id="ram-badge"
                           >2048 MB</span
                         >
@@ -537,18 +537,18 @@
                       <input
                         type="range"
                         id="vm-ram"
-                        min="512"
+                        min="256"
                         max="8192"
                         step="256"
                         value="2048"
                         aria-label="Memória RAM em MB"
                         oninput="onRAMSlider(this.value)"
                       />
-                      <div class="preset-chips">
+                      <div class="preset-chips" id="ram-preset-chips">
                         <button
                           type="button"
                           class="chip-btn"
-                          id="chip-1024"
+                          data-val="1024"
                           onclick="setRAMPreset(1024)"
                         >
                           1 GB
@@ -556,7 +556,7 @@
                         <button
                           type="button"
                           class="chip-btn active"
-                          id="chip-2048"
+                          data-val="2048"
                           onclick="setRAMPreset(2048)"
                         >
                           2 GB
@@ -564,7 +564,7 @@
                         <button
                           type="button"
                           class="chip-btn"
-                          id="chip-4096"
+                          data-val="4096"
                           onclick="setRAMPreset(4096)"
                         >
                           4 GB
@@ -572,7 +572,7 @@
                         <button
                           type="button"
                           class="chip-btn"
-                          id="chip-8192"
+                          data-val="8192"
                           onclick="setRAMPreset(8192)"
                         >
                           8 GB

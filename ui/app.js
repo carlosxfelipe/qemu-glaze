@@ -166,9 +166,9 @@ function onCoresSlider(val) {
     val + (val === 1 ? " Core" : " Cores");
   document.getElementById("cpu-sub-label").textContent =
     "Alocado: " + val + (val === 1 ? " Core" : " Cores");
-  [1, 2, 4, 8].forEach((c) => {
-    const chip = document.getElementById("chip-core-" + c);
-    if (chip) chip.classList.toggle("active", val === c);
+  document.querySelectorAll("#cores-preset-chips .chip-btn").forEach((chip) => {
+    const chipVal = parseInt(chip.getAttribute("data-val"), 10);
+    chip.classList.toggle("active", chipVal === val);
   });
   updateCmdPreview();
 }
@@ -179,7 +179,7 @@ function setCoresPreset(c) {
 }
 
 function onRAMSlider(val) {
-  const mb = parseInt(val, 10);
+  const mb = parseInt(val, 10) || 256;
   const slider = document.getElementById("vm-ram");
   updateSliderProgress(slider);
   const gb = (mb / 1024).toFixed(1);
@@ -187,9 +187,9 @@ function onRAMSlider(val) {
   document.getElementById("ram-sub-label").textContent =
     "Alocado: " + mb + " MB (" + gb + " GB)";
 
-  [1024, 2048, 4096, 8192].forEach((p) => {
-    const chip = document.getElementById("chip-" + p);
-    if (chip) chip.classList.toggle("active", mb === p);
+  document.querySelectorAll("#ram-preset-chips .chip-btn").forEach((chip) => {
+    const chipVal = parseInt(chip.getAttribute("data-val"), 10);
+    chip.classList.toggle("active", chipVal === mb);
   });
 
   updateCmdPreview();
@@ -765,14 +765,76 @@ function renderSystemInfo(info) {
     }
   }
 
+  const maxCores = Math.min(Math.max(info.hostCpus || 1, 1), 64);
   const coresSlider = document.getElementById("vm-cores");
-  coresSlider.max = Math.max(info.hostCpus, 4);
+  coresSlider.min = 1;
+  coresSlider.max = maxCores;
+  if (parseInt(coresSlider.value, 10) > maxCores) {
+    coresSlider.value = maxCores;
+  }
   document.getElementById("max-cores-label").textContent =
-    `${coresSlider.max} Cores`;
+    maxCores + (maxCores === 1 ? " Core" : " Cores");
 
+  const coresChips = document.getElementById("cores-preset-chips");
+  if (coresChips) {
+    const candidates = [1, 2, 4, 8, 12, 16, 24, 32, 48, 64].filter(
+      (c) => c <= maxCores,
+    );
+    if (maxCores > 1 && !candidates.includes(maxCores)) {
+      candidates.push(maxCores);
+    }
+    const picked =
+      candidates.length > 5
+        ? [
+            candidates[0],
+            candidates[Math.floor(candidates.length * 0.25)],
+            candidates[Math.floor(candidates.length * 0.5)],
+            candidates[Math.floor(candidates.length * 0.75)],
+            candidates[candidates.length - 1],
+          ].filter((v, i, arr) => arr.indexOf(v) === i)
+        : candidates;
+    coresChips.innerHTML = picked
+      .map(
+        (c) =>
+          `<button type="button" class="chip-btn ${parseInt(coresSlider.value, 10) === c ? "active" : ""}" data-val="${c}" onclick="setCoresPreset(${c})">${c} ${c === 1 ? "Core" : "Cores"}</button>`,
+      )
+      .join("");
+  }
+
+  const rawMaxRAM = Math.min(Math.max(info.hostMemoryMB || 2048, 256), 131072);
+  const maxRAM = Math.max(256, Math.floor(rawMaxRAM / 256) * 256);
   const ramSlider = document.getElementById("vm-ram");
-  ramSlider.max = Math.min(info.hostMemoryMB, 32768);
-  document.getElementById("max-ram-label").textContent = `${ramSlider.max} MB`;
+  ramSlider.min = 256;
+  ramSlider.step = 256;
+  ramSlider.max = maxRAM;
+  if (parseInt(ramSlider.value, 10) > maxRAM) {
+    ramSlider.value = maxRAM;
+  }
+  document.getElementById("max-ram-label").textContent = `${maxRAM} MB`;
+
+  const ramChips = document.getElementById("ram-preset-chips");
+  if (ramChips) {
+    const baseCandidates =
+      maxRAM <= 4096
+        ? [512, 1024, 2048, 4096]
+        : maxRAM <= 8192
+          ? [1024, 2048, 4096, 8192]
+          : [1024, 2048, 4096, 8192, 16384, 32768, 65536, 98304, 131072];
+    const filtered = baseCandidates.filter((mb) => mb <= maxRAM);
+    if (maxRAM >= 1024 && maxRAM % 1024 === 0 && !filtered.includes(maxRAM)) {
+      filtered.push(maxRAM);
+    }
+    const picked = filtered.length > 5 ? filtered.slice(-5) : filtered;
+    ramChips.innerHTML = picked
+      .map((mb) => {
+        const label = mb >= 1024 ? `${mb / 1024} GB` : `${mb} MB`;
+        return `<button type="button" class="chip-btn ${parseInt(ramSlider.value, 10) === mb ? "active" : ""}" data-val="${mb}" onclick="setRAMPreset(${mb})">${label}</button>`;
+      })
+      .join("");
+  }
+
+  onCoresSlider(coresSlider.value);
+  onRAMSlider(ramSlider.value);
 
   const diskSlider = document.getElementById("vm-disk-size");
   if (info.hostDiskFreeGB > 0) {
