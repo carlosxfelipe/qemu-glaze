@@ -1,8 +1,19 @@
 # QEMU Glaze — Gerenciador de Máquinas Virtuais
 
+[![Go Version](https://img.shields.io/badge/Go-1.27%2B-00ADD8?style=flat&logo=go&logoColor=white)](https://go.dev/)
+[![CGO](https://img.shields.io/badge/CGO__ENABLED-0-00ADD8?style=flat)](https://pkg.go.dev/cmd/cgo)
+[![Glaze](https://img.shields.io/badge/UI-Glaze-3584E4?style=flat)](https://github.com/crgimenes/glaze)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-555555?style=flat)](#empacotamento-e-assets)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat)](LICENSE)
+
 Aplicativo desktop para criar, configurar e gerenciar máquinas virtuais QEMU, escrito em **Go puro (`CGO_ENABLED=0`)** com o [**Glaze**](https://github.com/crgimenes/glaze) (`WKWebView` no macOS e `WebKitGTK` no Linux via `purego`).
 
 A interface web embarcada é servida diretamente pelo protocolo customizado `app://home/index.html`, sem abrir portas TCP locais, comunicando-se com o backend Go via `glaze.BindMethods` e eventos em tempo real (`glaze.NewEvents`).
+
+<p align="center">
+  <img src="preview/light.png" alt="QEMU Glaze Light Mode" width="49%">
+  <img src="preview/dark.png" alt="QEMU Glaze Dark Mode" width="49%">
+</p>
 
 ## O que o projeto faz
 
